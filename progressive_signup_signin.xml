@@ -1,0 +1,30 @@
+<TrustFrameworkPolicy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.microsoft.com/online/cpim/schemas/2013/06" PolicySchemaVersion="0.3.0.0" TenantId="mytenant.onmicrosoft.com" PolicyId="B2C_1A_progressive_signup_signin" PublicPolicyUri="http://mytenant.onmicrosoft.com/B2C_1A_progressive_signup_signin" TenantObjectId="a45f9885-8d00-4f66-8941-b2035838bfcb">
+  <BasePolicy>
+    <TenantId>mytenant.onmicrosoft.com</TenantId>
+    <PolicyId>B2C_1A_TrustFrameworkExtensions</PolicyId>
+  </BasePolicy>
+  <RelyingParty>
+    <DefaultUserJourney ReferenceId="SignUpOrSignInProgressive" />
+    <UserJourneyBehaviors>
+      <ScriptExecution>Allow</ScriptExecution>
+    </UserJourneyBehaviors>
+    <TechnicalProfile Id="PolicyProfile">
+      <DisplayName>PolicyProfile</DisplayName>
+      <Protocol Name="OpenIdConnect" />
+      <OutputClaims>
+        <OutputClaim ClaimTypeReferenceId="givenName" />
+        <OutputClaim ClaimTypeReferenceId="surname" />
+        <OutputClaim ClaimTypeReferenceId="email" />
+        <OutputClaim ClaimTypeReferenceId="objectId" />
+        <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="sub" />
+        <OutputClaim ClaimTypeReferenceId="city" />
+        <OutputClaim ClaimTypeReferenceId="country" />
+        <OutputClaim ClaimTypeReferenceId="postalCode" />
+        <OutputClaim ClaimTypeReferenceId="extension_Organization" />
+        <OutputClaim ClaimTypeReferenceId="extension_ContactNumber" />
+        <OutputClaim ClaimTypeReferenceId="TrustFrameworkPolicy" Required="true" DefaultValue="{policy}" />
+      </OutputClaims>
+      <SubjectNamingInfo ClaimType="sub" />
+    </TechnicalProfile>
+  </RelyingParty>
+</TrustFrameworkPolicy>
