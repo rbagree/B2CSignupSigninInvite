@@ -1,0 +1,32 @@
+Following is the code that was created while doing the multi-tenant strategy with user with multpile location. The user should be able to switch between regions seamlessly.
+
+The following code would be part the of the APIM where it disect the regionCombined variable which has values in the following format:
+regionCombined: us:452352435;uk:2451523
+
+********************************************************************
+
+		<!--set-variable name="existingCookie" value="@(context.Request.Headers.GetValueOrDefault("Cookie", "").Split(';').Where(c => c.Trim().StartsWith("regionList=")).FirstOrDefault()?.Split('=')[1])" /-->
+		<!-- Append or update a key-value pair -->
+		<!--set-variable name="modifiedRegionList" value="@{
+            // Retrieve the JSON string from the variable
+            var jsonString = context.Variables.GetValueOrDefault<string>("existingCookie");
+            
+            // Initialize a JObject from the existing JSON or create a new empty JObject if null or empty
+            var jsonObject = string.IsNullOrEmpty(jsonString) ? new JObject() : JObject.Parse(jsonString);
+
+            // Retrieve the new key name from the policy variable
+            var newKey = context.Variables.GetValueOrDefault<string>("regionClaim");
+
+            // Retrieve the new value from the policy variable
+            var newValue = context.Variables.GetValueOrDefault<string>("sessionId");
+            
+            // Add or update the key-value pair
+            jsonObject[newKey] = newValue; // If "newKey" exists, its value is updated; otherwise, it's added.
+            
+            // Convert the modified JSON object back to a string
+            return Newtonsoft.Json.JsonConvert.SerializeObject(jsonObject);
+        }" /-->
+
+			<!--set-header name="Set-Cookie" exists-action="append">
+				<value>@($"regionList={context.Variables.GetValueOrDefault<string>("modifiedRegionList")}; Secure; SameSite=Strict; Path=/; HttpOnly")</value>
+			</set-header-->
